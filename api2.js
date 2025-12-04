@@ -86,18 +86,54 @@ const displayNewsByCategories = (newsItem) => {
                     ${news.time || "Unknown time"}
                 </p>
 
-                <button class="mt-2 px-3 py-1 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition">
-                    Read More
-                </button>
+                <div class="flex justify-between mt-3">
+
+            <!-- Read More Button -->
+            <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 text-sm font-medium hover:border-red-600 hover:text-red-600 transition">
+            Read More
+            <i class="fa-solid fa-arrow-right-long"></i>
+            </button>
+
+            <!-- Bookmark Button -->
+            <button class="bookmark_btn flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition">
+            <i class="fa-regular fa-bookmark"></i> Save
+            </button>
+
+            </div>
 
             </div>
 
         </div>
         `;
+        newsDiv.querySelector(".bookmark_btn").addEventListener("click", () => {
+        loadBookmarks(news);
+});
+
 
         newscontainer.append(newsDiv);
     }
 };
 
-loadNewsByCategory();
+    const loadBookmarks=(news)=>{
+        const bookmarkContainer = document.getElementById("bookmarkcontainer");
+
+    const item = document.createElement("div");
+    item.className = "p-3 border-b border-gray-300 hover:bg-gray-100 transition";
+
+    item.innerHTML = `
+        <h2 class="text-md font-semibold text-gray-800">${news.title}</h2>
+        <button onclick="deleteBookMarks('${news.id}')" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition">delete</button>
+        
+    `;
+
+    bookmarkContainer.append(item);
+
+    };
+    const deleteBookMarks=(BookMarkId)=>{
+        const filterbookMarks=news.filter(bookMark=>bookMark.id!==BookMarkId);
+        console.log(filterbookMarks);
+    }
+    
+
 loadCategories();
+loadNewsByCategory('main');
