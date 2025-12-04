@@ -1,43 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BBC Bangla</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@5"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-  </head>
-  <body class="">
-  <nav>
-    <div class="nav-div-1 bg-red-600">
-      <div class="max-w-7xl mx-auto px-6 py-5">
-        <img class="justify-center items-center invert" src="assets/logo.svg" alt="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API project-2</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="bg-red-600 p-6">
+      <div class="max-w-4xl mx-auto">
+        <img class="invert" src="assets/logo.svg" alt="">
       </div>
     </div>
-    <div class="nav-div-2 border-b-1 border-gray-300">
-      <ul id="catagory-container" class="flex gap-5 max-w-7xl mx-auto px-6 py-5">
+    <nav class="border-b border-gray-200">
+      <ul id="news-category" class="flex gap-6 max-w-4xl mx-auto py-4 text-lg font-semibold">
         
       </ul>
 
-    </div>
-  </nav>
-  <main class="max-w-7xl mx-auto px-6 py-5 grid grid-cols-4 gap-5">
-    <div  id="news-container" class=" grid grid-cols-3 gap-6 col-span-3">
-
-    </div>
-    <div id="bookmark-container">
-      <h1 class="border border-amber-500 bg-amber-200 px-4 py-6 font-bold text-3xl">Bookmark</h1>
-
+    </nav>
+    
+  </header>
+  <main class="max-w-4xl mx-auto py-4">
+    <div id="news-container" class="grid grid-cols-4 gap-5">
+      <!-- <h1 class="text-2xl font-medium">${news.title}</h1> -->
+      
     </div>
   </main>
+  <footer></footer>
+  
+
   <script src="api2.js"></script>
-  </body>
+</body>
 </html>

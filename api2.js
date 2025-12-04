@@ -1,124 +1,103 @@
-const catagoryContainer = document.getElementById('catagory-container');
-const newsContainer = document.getElementById('news-container');
-const bookmarkContainer = document.getElementById('bookmark-container');
-
-let bookmarkList = []; // store bookmarks here
-
-// CATEGORY CLICK
-catagoryContainer.addEventListener('click', (e) => {
-    if (e.target && e.target.nodeName === "LI") {
-
-        const allLI = catagoryContainer.querySelectorAll("li");
-        allLI.forEach(li => li.classList.remove("border-b-4", "border-red-500"));
-
-        e.target.classList.add("border-b-4", "border-red-500");
-
-        loadNewsByCatagory(e.target.id);
-    }
-});
-
-
-// FETCH NEWS BY CATEGORY
-const loadNewsByCatagory = (Catid) => {
-    fetch(`https://news-api-fs.vercel.app/api/categories/${Catid}`)
-        .then((res) => res.json())
-        .then((data) => showNews(data.articles))
-        .catch((err) => console.log(err));
+const loadCategories = () => {
+    fetch('https://news-api-fs.vercel.app/api/categories')
+    .then((res) => res.json())
+    .then((data) => {
+        displayCategories(data.categories);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 };
 
+const displayCategories = (categories) => {
+    const categoriesContainer = document.getElementById('news-category');
+    categoriesContainer.innerHTML = '';
 
-// DISPLAY NEWS
-const showNews = (news) => {
-    newsContainer.innerHTML = "";
+    for (let cat of categories) {
+        const showCategory = document.createElement('li');
+        showCategory.className = "px-3 py-1 hover:border-b-4 hover:border-red-600 cursor-pointer";
 
-    news.forEach(n => {
-        const imageUrl = n.image?.srcset?.[5]?.url || "";
+        // ADD category id in dataset
+        showCategory.dataset.id = cat.id;
 
-        newsContainer.innerHTML += `
-<div class="card bg-base-100 shadow-xl mb-6 border rounded-xl overflow-hidden">
+        showCategory.innerHTML = `<a>${cat.title}</a>`;
+        categoriesContainer.append(showCategory);
+    }
 
-    <figure class="w-full h-56">
-        <img class="w-full h-full object-cover" src="${imageUrl}" alt="">
-    </figure>
+    categoriesContainer.addEventListener("click", (e) => {
+        const li = e.target.closest("li");
+        if (!li) return;
 
-    <div class="card-body">
-        <h1 class="text-xl font-semibold">${n.title}</h1>
-        <p class="text-gray-500">${n.time}</p>
+        const id = li.dataset.id;  // GET category id
+        console.log(id);
 
-        <div class="card-actions justify-end mt-4">
-            <button class="btn btn-outline btn-primary bookmark-btn"
-                data-title="${n.title}"
-                data-time="${n.time}"
-                data-img="${imageUrl}">
-                Bookmark
-            </button>
-        </div>
-    </div>
-</div>
-`;
+        // Remove old active class
+        categoriesContainer.querySelectorAll("li").forEach((item) => {
+            item.classList.remove("border-b-4", "border-red-600");
+        });
 
+        // Add active border
+        li.classList.add("border-b-4", "border-red-600");
+
+        // Load news
+        loadNewsByCategory(id);
     });
 };
 
+const loadNewsByCategory = (id) => {
+    fetch(`https://news-api-fs.vercel.app/api/categories/${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+        displayNewsByCategories(data.articles);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+};
 
-// CLICK EVENT FOR BOOKMARK BUTTON
-newsContainer.addEventListener("click", (e) => {
-    if (e.target.classList.contains("bookmark-btn")) {
+const displayNewsByCategories = (newsItem) => {
+    const newscontainer = document.getElementById('news-container');
+    newscontainer.innerHTML = '';
 
-        const title = e.target.dataset.title;
-        const time = e.target.dataset.time;
-        const img = e.target.dataset.img;
+    for (let news of newsItem) {
+        console.log(news);
 
-        const item = { title, time, img };
+        const newsDiv = document.createElement('div');
 
-        // prevent duplicates
-        const exists = bookmarkList.some(b => b.title === title);
-        if (!exists) {
-            bookmarkList.push(item);
-            displayBookmarks();
-        } else {
-            alert("Already bookmarked!");
-        }
-    }
-});
+        newsDiv.innerHTML = `
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 cursor-pointer">
 
-
-// SHOW BOOKMARK LIST
-const displayBookmarks = () => {
-    bookmarkContainer.innerHTML = "";
-
-    bookmarkList.forEach(b => {
-        bookmarkContainer.innerHTML += `
-        <div class="card bg-base-100 border shadow p-4 mb-3 flex items-center gap-4 rounded-xl">
-
-            <img src="${b.img}" class="w-24 h-20 object-cover rounded-lg">
-
-            <div>
-                <h2 class="text-lg font-semibold">${b.title}</h2>
-                <p class="text-sm text-gray-500">${b.time}</p>
+            <!-- News Image -->
+            <div class="h-40 overflow-hidden">
+                <img src="${news.image?.srcset?.[5]?.url || news.image?.src || ''}" 
+                     alt="${news.title}" 
+                     class="w-full h-full object-cover">
             </div>
+
+            <!-- Card Content -->
+            <div class="p-4 flex flex-col gap-2">
+
+                <h1 class="text-lg font-semibold text-gray-800 leading-snug line-clamp-2">
+                    ${news.title}
+                </h1>
+
+                <p class="text-sm text-gray-500 flex items-center gap-1">
+                    <i class="fa-regular fa-clock"></i>
+                    ${news.time || "Unknown time"}
+                </p>
+
+                <button class="mt-2 px-3 py-1 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition">
+                    Read More
+                </button>
+
+            </div>
+
         </div>
         `;
-    });
+
+        newscontainer.append(newsDiv);
+    }
 };
 
-
-// LOAD CATEGORY LIST
-const loadCatagory = () => {
-    fetch("https://news-api-fs.vercel.app/api/categories")
-        .then((res) => res.json())
-        .then((data) => {
-            data.categories.forEach(cat => {
-                catagoryContainer.innerHTML += `
-                <li id="${cat.id}" class="hover:border-b-4 cursor-pointer">
-                    ${cat.title}
-                </li>`;
-            });
-        })
-        .catch(err => console.log(err));
-};
-
-
-// INITIAL LOAD
-loadCatagory();
-loadNewsByCatagory("main");
+loadNewsByCategory();
+loadCategories();
